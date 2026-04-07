@@ -1,63 +1,20 @@
 package b3;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+//Input
+// userId: ID người dùng
+// foodName: tên món (vd: "Mì xào bò")
+// quantity: số lượng
 
-@Service
-public class OrderFoodService {
+//Output
+// Thành công || Thất bại
 
-    private final b3.b3.InventoryRepository inventoryRepo;
-    private final UserAccountRepository userRepo;
-    @Autowired
-    public OrderFoodService(InventoryRepository inventoryRepo,
-                            UserAccountRepository userRepo) {
-        this.inventoryRepo = inventoryRepo;
-        this.userRepo = userRepo;
-    }
 
-    public String orderFood(String username, String foodName, int quantity) {
-
-        // 1. Check tồn tại + kho
-        int stock = inventoryRepo.getStock(foodName);
-        if (stock <= 0) {
-            return "Hết món trong kho";
-        }
-
-        if (stock < quantity) {
-            return "Không đủ số lượng";
-        }
-
-        // 2. Tính tiền
-        double price = inventoryRepo.getPrice(foodName);
-        double total = price * quantity;
-
-        // 3. Check tiền user
-        double balance = userRepo.getBalance(username);
-        if (balance < total) {
-            return "Tài khoản không đủ tiền";
-        }
-
-        // 4. Xử lý
-        userRepo.deductBalance(username, total);
-        inventoryRepo.reduceStock(foodName, quantity);
-
-        return "Đặt món thành công";
-    }
-}
-public class b3 {
-    //Các bước
-    //Nhận request (username, foodName, quantity)
-    //Kiểm tra món tồn tại trong kho
-    //Kiểm tra số lượng tồn
-    //Tính tổng tiền
-    //Kiểm tra số dư user
-    //Nếu OK:
-    //Trừ tiền
-    //Trừ kho
-    //Trả kết quả
-    public interface InventoryRepository {
-        int getStock(String foodName);
-        double getPrice(String foodName);
-        void reduceStock(String foodName, int quantity);
-    }
-}
+//Nhận request đặt món từ người dùng :
+// 1.Kiểm tra món ăn có tồn tại trong kho không
+// 2.Nếu số lượng = 0 → trả về "Hết hàng"
+// 3.Tính tổng tiền đơn hàng
+// 4.Kiểm tra số dư tài khoản người dùng
+// 5.Nếu số dư < giá → trả về "Không đủ tiền"
+// 6.Trừ tiền trong tài khoản
+// 7.Trừ số lượng món trong kho
+// 8.Trả về "Đặt món thành công"
