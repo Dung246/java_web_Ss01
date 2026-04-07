@@ -1,6 +1,4 @@
 package b4;
-
-public class b4 {
     //Mục tiêu
     //
     //Sau khi nạp tiền thành công, hệ thống cần gửi thông báo qua:
@@ -52,5 +50,5 @@ public class b4 {
     //        }
     //    }
     //}
-
-}
+    
+    // ==> Constructor Injection là lựa chọn tối ưu vì đảm bảo tính an toàn, rõ ràng về dependency và dễ kiểm thử
